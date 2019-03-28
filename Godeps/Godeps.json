@@ -1,5 +1,5 @@
 {
-	"ImportPath": "k8s-client-go",
+	"ImportPath": "k8s-client",
 	"GoVersion": "go1.11",
 	"GodepVersion": "v80",
 	"Packages": [
@@ -86,6 +86,11 @@
 			"Rev": "94122c33edd36123c84d5368cfb2b69df93a0ec8"
 		},
 		{
+			"ImportPath": "github.com/pkg/errors",
+			"Comment": "v0.8.0-17-g059132a",
+			"Rev": "059132a15dd08d6704c67711dae0cf35ab991756"
+		},
+		{
 			"ImportPath": "github.com/spf13/pflag",
 			"Comment": "v1.0.3-8-g24fa697",
 			"Rev": "24fa6976df40757dce6aea913e7b81ade90530e1"
@@ -96,6 +101,10 @@
 		},
 		{
 			"ImportPath": "golang.org/x/net/context",
+			"Rev": "c44066c5c816ec500d459a2a324a753f78531ae0"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context/ctxhttp",
 			"Rev": "c44066c5c816ec500d459a2a324a753f78531ae0"
 		},
 		{
