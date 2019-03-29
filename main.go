@@ -4,12 +4,31 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"log"
+	"os"
 )
 
 var funmap map[string]func(string,int)(string,error)
 
+type Point struct {
+	Name string
+	Age int
+}
+
+var s = &Point{"test",12}
+
+func GetSt() *Point  {
+	return s
+}
+
 func main()  {
 
+	s1 := GetSt()
+	s.Age = 11
+	fmt.Printf("s : %v address: %p \n", s, &s)
+	fmt.Printf("s1 : %v address: %p \n", s1, &s1)
+	fmt.Print(&*s1)
+
+	os.Exit(0)
 	funmap = make(map[string]func(string,int)(string,error))
 	funmap["test"] = func(str string,i int)(stp string,err error) {
 		fmt.Println("i'-a")
