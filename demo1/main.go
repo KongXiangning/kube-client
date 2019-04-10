@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/binary"
 	"encoding/json"
 	"fmt"
 	"k8s.io/api/apps/v1beta1"
@@ -14,6 +15,18 @@ import (
 	"log"
 )
 
+func Int64ToBytes(i int64) []byte {
+	var buf = make([]byte, 8)
+	binary.BigEndian.PutUint64(buf, uint64(i))
+	return buf
+}
+
+func Int32ToBytes(i int32) []byte {
+	var buf = make([]byte, 4)
+	binary.BigEndian.PutUint32(buf, uint32(i))
+	return buf
+}
+
 func main() {
 	var (
 		clientset *kubernetes.Clientset
@@ -22,6 +35,10 @@ func main() {
 		is        chan int
 		err       error
 	)
+
+	var i int64 = 232422
+	b := Int64ToBytes(i)
+	fmt.Println(b)
 
 	if clientset, err = common.InitClient(); err != nil {
 		goto FAIL

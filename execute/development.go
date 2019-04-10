@@ -5,19 +5,17 @@ import (
 	"fmt"
 	"k8s.io/api/apps/v1beta1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
 	inV1beta1 "k8s.io/client-go/kubernetes/typed/apps/v1beta1"
 	"log"
 )
 
 var deployment = func(transfer KubeTransfer, outChan chan KubeTransfer) (err error) {
 	var (
-		client        *kubernetes.Clientset
+		client        = client.clientset
 		deployment    = v1beta1.Deployment{}
 		k8sDeployment *v1beta1.Deployment
 		deleteOptions *v1.DeleteOptions
 	)
-
 	if err = json.Unmarshal(transfer.HandleJson, &deployment); err != nil {
 		goto FAIL
 	}
@@ -46,7 +44,7 @@ var deployment = func(transfer KubeTransfer, outChan chan KubeTransfer) (err err
 		goto FAIL
 	}
 	outChan <- transfer
-
+	return
 FAIL:
 	log.Println(err)
 	return

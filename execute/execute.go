@@ -3,7 +3,6 @@ package execute
 import (
 	"k8s.io/client-go/kubernetes"
 	"kube-client/common"
-	"log"
 	"sync"
 )
 
@@ -36,11 +35,16 @@ func GetClient() *Client {
 }
 
 func (client *Client) initTypeFunMaps() {
+	client.typeFunMaps = make(map[string]func(KubeTransfer, chan KubeTransfer) error)
 	client.typeFunMaps["development"] = deployment
+	client.typeFunMaps["namespace"] = namespace
 }
 
 func (client *Client) Execute(transfer KubeTransfer, outChan chan KubeTransfer) {
 	if err := client.typeFunMaps[transfer.Method](transfer, outChan); err != nil {
-		log.Print(err)
+		transfer.Types = 2
+		transfer.Result = err.Error()
+		transfer.HandleJson = nil
+		outChan <- transfer
 	}
 }
