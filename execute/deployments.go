@@ -9,7 +9,7 @@ import (
 	"log"
 )
 
-var deployment = func(transfer KubeTransfer, outChan chan KubeTransfer) (err error) {
+var deployments = func(transfer KubeTransfer, outChan chan KubeTransfer) (err error) {
 	var (
 		client        = client.clientset
 		deployment    = v1beta1.Deployment{}
@@ -18,6 +18,8 @@ var deployment = func(transfer KubeTransfer, outChan chan KubeTransfer) (err err
 	)
 	if err = json.Unmarshal(transfer.HandleJson, &deployment); err != nil {
 		goto FAIL
+	} else {
+		transfer.HandleJson = nil
 	}
 
 	switch transfer.Types {
@@ -30,6 +32,14 @@ var deployment = func(transfer KubeTransfer, outChan chan KubeTransfer) (err err
 			goto FAIL
 		}
 	case 2:
+		if k8sDeployment, err = client.AppsV1beta1().Deployments(deployment.Namespace).Get(deployment.Name, v1.GetOptions{}); err != nil {
+			goto FAIL
+		} else {
+			if transfer.HandleJson, err = json.Marshal(k8sDeployment); err != nil {
+				goto FAIL
+			}
+		}
+	case 3:
 		k8sDeployment = nil
 		if err = client.AppsV1beta1().Deployments(deployment.Namespace).Delete(deployment.Name, deleteOptions); err != nil {
 			goto FAIL
@@ -40,9 +50,7 @@ var deployment = func(transfer KubeTransfer, outChan chan KubeTransfer) (err err
 	}
 
 	transfer.Types = 1
-	if transfer.HandleJson, err = json.Marshal(k8sDeployment); err != nil {
-		goto FAIL
-	}
+	transfer.Result = "success"
 	outChan <- transfer
 	return
 FAIL:

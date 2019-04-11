@@ -17,9 +17,9 @@ type Client struct {
 }
 
 type KubeTransfer struct {
-	Types          byte
-	Method, Result string
-	HandleJson     []byte
+	Types           byte
+	Method, Result  string
+	Hid, HandleJson []byte
 }
 
 func GetClient() *Client {
@@ -36,8 +36,12 @@ func GetClient() *Client {
 
 func (client *Client) initTypeFunMaps() {
 	client.typeFunMaps = make(map[string]func(KubeTransfer, chan KubeTransfer) error)
-	client.typeFunMaps["development"] = deployment
-	client.typeFunMaps["namespace"] = namespace
+	client.typeFunMaps["namespaces"] = namespaces
+	client.typeFunMaps["deployments"] = deployments
+	client.typeFunMaps["services"] = services
+	client.typeFunMaps["secrets"] = secrets
+	client.typeFunMaps["endpoints"] = endpoints
+	client.typeFunMaps["statefulsets"] = statefulsets
 }
 
 func (client *Client) Execute(transfer KubeTransfer, outChan chan KubeTransfer) {
